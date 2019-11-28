@@ -11,6 +11,14 @@ var addNewAccount = (db, accountData) => {
     collection.insertOne(accountData)
 }
 
+var getAllAccountsData = (db, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({}).toArray((err, docs) => {
+        console.log('found the following records')
+        callback(docs)
+    })
+}
+
 app.post('/accounts', jsonParser, (req, res) => {
 //these will be the names for the url:
     const name = req.body.name

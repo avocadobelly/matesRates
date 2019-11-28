@@ -8,7 +8,6 @@ var jsonParser = bodyParser.json()
 
 var addNewAccount = (db, accountData) => {
     var collection = db.collection('accounts')
-    console.log(accountData)
     collection.insertOne(accountData)
 }
 

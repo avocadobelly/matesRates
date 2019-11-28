@@ -6,14 +6,13 @@ const port = 4400
 const url = 'mongodb://localhost:27017'
 var jsonParser = bodyParser.json()
 
-
 var addNewAccount = (db, accountData) => {
     var collection = db.collection('accounts')
     console.log(accountData)
     collection.insertOne(accountData)
 }
 
-app.post('/accounts', jsonParser, function (req, res) {
+app.post('/accounts', jsonParser, (req, res) => {
 //these will be the names for the url:
     const name = req.body.name
     const balance = req.body.balance

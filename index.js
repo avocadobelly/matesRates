@@ -14,7 +14,6 @@ var addNewAccount = (db, accountData) => {
 var getAllAccountsData = (db, callback) => {
     var collection = db.collection('accounts')
     collection.find({}).toArray((err, docs) => {
-        console.log('found the following records')
         callback(docs)
     })
 }

@@ -11,6 +11,13 @@ var addNewAccount = (db, accountData) => {
     collection.insertOne(accountData)
 }
 
+var getAllAccountsData = (db, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({}).toArray((err, docs) => {
+        callback(docs)
+    })
+}
+
 app.post('/accounts', jsonParser, (req, res) => {
 //these will be the names for the url:
     const name = req.body.name
@@ -31,5 +38,17 @@ app.post('/accounts', jsonParser, (req, res) => {
     })
 res.send('added new account')
 })
+
+app.get('/accounts', (req, res) => {
+    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+        console.log('Connected correctly to MongoDb')
+        let db = client.db('matesRates')
+        let result = getAllAccountsData(db, (allAccounts) => {
+            res.json(allAccounts)
+        })
+        client.close()
+    })
+    res.send('got accounts')
+});
 
 app.listen(port, () => console.log(`app listening on port ${port}`))

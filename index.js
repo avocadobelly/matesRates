@@ -18,6 +18,30 @@ var getAllAccountsData = (db, callback) => {
     })
 }
 
+var getAccountsBelowBal = (db, upperBal, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({balance: {$lt: upperBal}}).toArray((err, docs) => {
+        let results = []
+        docs.forEach(doc => {
+            doc.balance = doc.balance.toString()
+            results.push(doc)
+        })
+        callback(results)
+    })
+}
+
+var getAccountsAboveBal = (db, lowerBal, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({balance: {$gt: lowerBal}}).toArray((err, docs) => {
+        let results = []
+        docs.forEach(doc => {
+            doc.balance = doc.balance.toString()
+            results.push(doc)
+        })
+        callback(results)
+    })
+}
+
 app.post('/accounts', jsonParser, (req, res) => {
 //these will be the names for the url:
     const name = req.body.name
@@ -49,6 +73,32 @@ app.get('/accounts', (req, res) => {
         client.close()
     })
     res.send('got accounts')
+});
+
+app.get('/accounts/:balance/below', (req, res) => {
+    let upperBal = req.params.balance
+    upperBal = parseFloat(upperBal)
+    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+        console.log('Connected correctly to MongoDb')
+        let db = client.db('matesRates')
+        let result = getAccountsBelowBal(db, upperBal, (accounts) => {
+            res.json(accounts)
+        })
+        client.close()
+    })
+});
+
+app.get('/accounts/:balance/above', (req, res) => {
+    let lowerBal = req.params.balance
+    lowerBal = parseFloat(lowerBal)
+    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+        console.log('Connected correctly to MongoDb')
+        let db = client.db('matesRates')
+        let result = getAccountsAboveBal(db, lowerBal, (accounts) => {
+            res.json(accounts)
+        })
+        client.close()
+    })
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}`))

@@ -1,6 +1,5 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const Decimal = require('decimal.js')
 const MongoClient = require('mongodb').MongoClient
 const app = express()
 const port = 4400
@@ -76,7 +75,7 @@ app.get('/accounts', (req, res) => {
     res.send('got accounts')
 });
 
-app.get('/accounts/:balance/andBelow', (req, res) => {
+app.get('/accounts/:balance/below', (req, res) => {
     let upperBal = req.params.balance
     upperBal = parseFloat(upperBal)
     MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
@@ -89,7 +88,7 @@ app.get('/accounts/:balance/andBelow', (req, res) => {
     })
 });
 
-app.get('/accounts/:balance/andAbove', (req, res) => {
+app.get('/accounts/:balance/above', (req, res) => {
     let lowerBal = req.params.balance
     lowerBal = parseFloat(lowerBal)
     MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {

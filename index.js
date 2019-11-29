@@ -31,6 +31,18 @@ var getAccountsBelowBal = (db, upperBal, callback) => {
     })
 }
 
+var getAccountsAboveBal = (db, lowerBal, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({balance: {$gt: lowerBal}}).toArray((err, docs) => {
+        results = []
+        docs.forEach(doc => {
+            doc.balance = doc.balance.toString()
+            results.push(doc)
+        })
+        callback(results)
+    })
+}
+
 app.post('/accounts', jsonParser, (req, res) => {
 //these will be the names for the url:
     const name = req.body.name
@@ -83,7 +95,7 @@ app.get('/accounts/:balance/andAbove', (req, res) => {
     MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
         console.log('Connected correctly to MongoDb')
         let db = client.db('matesRates')
-        let result = getAccountsBelowBal(db, upperBal, (accounts) => {
+        let result = getAccountsAboveBal(db, lowerBal, (accounts) => {
             res.json(accounts)
         })
         client.close()

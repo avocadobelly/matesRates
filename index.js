@@ -21,7 +21,7 @@ var getAllAccountsData = (db, callback) => {
 var getAccountsBelowBal = (db, upperBal, callback) => {
     var collection = db.collection('accounts')
     collection.find({balance: {$lt: upperBal}}).toArray((err, docs) => {
-        results = []
+        let results = []
         docs.forEach(doc => {
             doc.balance = doc.balance.toString()
             results.push(doc)
@@ -33,7 +33,7 @@ var getAccountsBelowBal = (db, upperBal, callback) => {
 var getAccountsAboveBal = (db, lowerBal, callback) => {
     var collection = db.collection('accounts')
     collection.find({balance: {$gt: lowerBal}}).toArray((err, docs) => {
-        results = []
+        let results = []
         docs.forEach(doc => {
             doc.balance = doc.balance.toString()
             results.push(doc)

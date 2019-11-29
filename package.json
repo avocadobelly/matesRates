@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "decimal.js": "^10.2.0",
     "express": "^4.17.1",
     "mongodb": "^3.3.5"
   },

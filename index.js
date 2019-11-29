@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const Decimal = require('decimal.js')
 const MongoClient = require('mongodb').MongoClient
 const app = express()
 const port = 4400
@@ -15,6 +16,18 @@ var getAllAccountsData = (db, callback) => {
     var collection = db.collection('accounts')
     collection.find({}).toArray((err, docs) => {
         callback(docs)
+    })
+}
+
+var getAccountsBelowBal = (db, upperBal, callback) => {
+    var collection = db.collection('accounts')
+    collection.find({balance: {$lt: upperBal}}).toArray((err, docs) => {
+        results = []
+        docs.forEach(doc => {
+            doc.balance = doc.balance.toString()
+            results.push(doc)
+        })
+        callback(results)
     })
 }
 
@@ -49,6 +62,19 @@ app.get('/accounts', (req, res) => {
         client.close()
     })
     res.send('got accounts')
+});
+
+app.get('/accounts/:balance/andBelow', (req, res) => {
+    let upperBal = req.params.balance
+    upperBal = parseFloat(upperBal)
+    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+        console.log('Connected correctly to MongoDb')
+        let db = client.db('matesRates')
+        let result = getAccountsBelowBal(db, upperBal, (accounts) => {
+            res.json(accounts)
+        })
+        client.close()
+    })
 });
 
 app.listen(port, () => console.log(`app listening on port ${port}`))

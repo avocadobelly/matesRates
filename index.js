@@ -77,4 +77,17 @@ app.get('/accounts/:balance/andBelow', (req, res) => {
     })
 });
 
+app.get('/accounts/:balance/andAbove', (req, res) => {
+    let lowerBal = req.params.balance
+    lowerBal = parseFloat(lowerBal)
+    MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+        console.log('Connected correctly to MongoDb')
+        let db = client.db('matesRates')
+        let result = getAccountsBelowBal(db, upperBal, (accounts) => {
+            res.json(accounts)
+        })
+        client.close()
+    })
+});
+
 app.listen(port, () => console.log(`app listening on port ${port}`))

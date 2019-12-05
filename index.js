@@ -72,7 +72,6 @@ app.get('/accounts', (req, res) => {
         })
         client.close()
     })
-    res.send('got accounts')
 });
 
 app.get('/accounts/:balance/below', (req, res) => {

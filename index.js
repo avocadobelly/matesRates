@@ -1,9 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient
+const cors = require('cors')
 const app = express()
 const port = 4400
 const url = 'mongodb://localhost:27017'
+app.use(cors())
 var jsonParser = bodyParser.json()
 
 var addNewAccount = (db, accountData) => {
